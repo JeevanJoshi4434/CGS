@@ -12,7 +12,7 @@ export class ContestWorker {
     private static workers: Map<string, Worker> = new Map();
 
     public static createWorker(contestId: string): Worker {
-        const queueName = `contest-${contestId}-queue`;
+        const queueName = `contest_${contestId}_queue`;
 
         if (this.workers.has(queueName)) {
             return this.workers.get(queueName)!;

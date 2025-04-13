@@ -36,8 +36,8 @@ export class QueueManager {
     }
 
     public static async addJob<T>(queueName: string, data: T): Promise<Job<T>> {
-        // Check if the queue name follows the contest-{id}-queue pattern
-        if (queueName.startsWith('contest-') && queueName.endsWith('-queue')) {
+        // Check if the queue name follows the contest_{id}_queue pattern
+        if (queueName.startsWith('contest_') && queueName.endsWith('_queue')) {
             // First check if the queue exists in memory
             let queue = this.queues.get(queueName);
 

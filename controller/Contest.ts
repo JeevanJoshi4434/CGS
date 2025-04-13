@@ -1,4 +1,4 @@
-import { Queue } from "bullmq";
+
 import { Contest } from "../types/contest";
 import { User } from "../types/user";
 import { Base64 } from "../utils/base64";
@@ -16,7 +16,7 @@ export default class ContestController extends MemoryCache {
     public async getContest(req: Request, res: Response): Promise<Response> {
 
             const { id, detailed="false" } = req.query;
-            const data = await this.get(`contest-${id}`) as Contest;
+            const data = await this.get(`contest:${id}`) as Contest;
             if (!data) return response(res, 404, 'Contest not found');
 
             const link = `token=${data._id}&&date=${data.date}&&test=true`;
@@ -31,12 +31,13 @@ export default class ContestController extends MemoryCache {
             const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!emailRegex.test(email)) return response(res, 400, 'Invalid email');
 
-            if(await this.get(`contest-${email}-user`)){
+            // Check if user is already registered for this contest
+            if(await this.get(`contest:${id}:user:${email}`)){
                 return response(res, 400, 'Login already done', {redirect: process.env.BASE_URL}); // !!TODO: use middleware
             }
 
             // Lookup at Redis Memory Cache
-            const data = await this.get(`contest-${id}`) as Contest;
+            const data = await this.get(`contest:${id}`) as Contest;
             if (!data) return response(res, 404, 'Contest is not live yet');
 
             // Generate JWT
@@ -58,7 +59,7 @@ export default class ContestController extends MemoryCache {
             };
 
             // Store user data onto Redis Memory Cache
-            await this.set(`contest-${email}-user`, { data: Base64.encode(JSON.stringify(UserData)), token: sessionToken });
+            await this.set(`contest:${id}:user:${email}`, { data: Base64.encode(JSON.stringify(UserData)), token: sessionToken });
 
             return response(res, 200, 'Success', { contest: data, redirect: sharableLink, token: sessionToken });
     }
@@ -69,32 +70,51 @@ export default class ContestController extends MemoryCache {
                 contestId: string
             } = req.body;
 
-            const sessionToken = req.headers['sessiontoken'] as string | undefined;
+            let sessionToken = req.headers['sessiontoken'] as string | undefined;
+
+            if (!sessionToken) {
+                sessionToken = req.headers['authorization'] as string | undefined;
+
+                if (sessionToken && sessionToken.startsWith('Bearer ')) {
+                    sessionToken = sessionToken.substring(7);
+                }
+            }
+
+            if (!sessionToken && req.body.sessionToken) {
+                sessionToken = req.body.sessionToken;
+            }
 
             if(!sessionToken) {
                 return response(res, 400, 'Session token is required', { redirect: process.env.BASE_URL });
             }
 
-            // Verify token
-            const decoded = jwt.verify(sessionToken, process.env.JWT_SECRET as string) as any;
-            if (!decoded) {
-                return response(res, 400, 'Invalid token', { redirect: process.env.BASE_URL });
+            console.log('Using token:', sessionToken.substring(0, 10) + '...');
+
+            let decoded;
+            try {
+                decoded = jwt.verify(sessionToken, process.env.JWT_SECRET as string) as any;
+            } catch (error) {
+                console.error('JWT verification error:', error);
+                return response(res, 401, 'Invalid token', { redirect: process.env.BASE_URL });
             }
 
-            // Verify user
-            const user = await this.get(`contest-${decoded.email}-user`) as { data: string, token: string };
+            const user = await this.get(`contest:${contestId}:user:${decoded.email}`) as { data: string, token: string };
             if (!user) {
                 return response(res, 400, 'Login to continue', { redirect: process.env.BASE_URL });
             }
 
-            // Directly assign the Base64-encoded user data
+            if (user.token !== sessionToken) {
+                console.log('Token mismatch: Redis token does not match request token');
+                console.log('Redis token (first 10 chars):', user.token.substring(0, 10) + '...');
+            }
+
             const queueData = {
                 data,
                 additionalInfo: user.data
             }
-            
+
             // Add job to queue
-            const queueName = `contest-${contestId}-queue`;
+            const queueName = `contest_${contestId}_queue`;
             const job = await QueueManager.addJob(queueName, {
                 contestId,
                 userId: decoded.email,
@@ -128,7 +148,7 @@ export default class ContestController extends MemoryCache {
             };
 
             // Store in Redis
-            const saved = await this.set(`contest-${contestId}`, contestData);
+            const saved = await this.set(`contest:${contestId}`, contestData);
 
             if (!saved) {
                 return response(res, 500, 'Failed to create contest');
