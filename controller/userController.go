@@ -20,6 +20,9 @@ func NewUserController() *UserController {
 	return &UserController{}
 }
 
+/**
+* @deprecated Use From TS server (Cache handle done there and we no need user to be in DB)
+*/
 func (uc *UserController) CreateUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {

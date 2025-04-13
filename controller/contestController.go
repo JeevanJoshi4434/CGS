@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+
+	
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"main.go/db"
@@ -47,17 +49,17 @@ func (cc *ContestController) CreateContest(c *gin.Context) {
 	if err := helper.StoreContest(c.Request.Context(), &contest); err != nil {
 		// Log error but don't fail the request
 		c.JSON(http.StatusCreated, gin.H{
-			"message": "Contest created successfully (Redis cache failed)",
+			"message":    "Contest created successfully (Redis cache failed)",
 			"contest_id": contest.Id.Hex(),
-			"date": contest.Date,
+			"date":       contest.Date,
 		})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Contest created successfully",
+		"message":    "Contest created successfully",
 		"contest_id": contest.Id.Hex(),
-		"date": contest.Date,
+		"date":       contest.Date,
 	})
 }
 
@@ -68,7 +70,7 @@ func (cc *ContestController) GetContest(c *gin.Context) {
 		return
 	}
 
-	// Try to get from Redis first
+	// Try to get from Redis first  id at redis = 'contest-${id}'
 	contest, err := helper.GetContest(c.Request.Context(), contestID)
 	if err == nil {
 		c.JSON(http.StatusOK, contest)
@@ -93,4 +95,4 @@ func (cc *ContestController) GetContest(c *gin.Context) {
 	helper.StoreContest(c.Request.Context(), contest)
 
 	c.JSON(http.StatusOK, contest)
-} 
+}
