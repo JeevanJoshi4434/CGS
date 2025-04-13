@@ -36,29 +36,9 @@ Authenticate an admin user.
 ```
 </details>
 
-<details>
-  <summary>⚠️ Error Responses</summary>
-
-- **Invalid Request (400):**
-```json
-{
-    "error": "Invalid request body"
-}
-```
-
-- **Invalid Credentials (401):**
-```json
-{
-    "error": "Invalid email or password"
-}
-```
-</details>
-
-## 👥 User Management
-
-### User Registration (Deprecated)
-> ⚠️ **This endpoint is deprecated. Use the TypeScript server for user registration instead.**
-
+## User Management
+@Depricated use TS server one
+### User Registration
 Register a new user.
 
 **Endpoint:** `POST /user/register`
