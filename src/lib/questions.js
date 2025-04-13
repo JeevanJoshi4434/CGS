@@ -1,4 +1,4 @@
-export default  [
+export default [
     {
         title: "Academic Performance",
         subsections: [
@@ -19,8 +19,8 @@ export default  [
                         options: [
                             "Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies",
                             "Literature/Language Arts", "History/Social Studies", "Visual Arts",
-                            "Performing Arts", "Technical/Vocational Subjects", "Physical Education",
-                            "Languages (other than primary language)"
+                            "Performing Arts", "Psychology", "Physical Education",
+                            "Languages (other than primary language)", "Finance/Economics"
                         ]
                     },
                     {
@@ -31,8 +31,8 @@ export default  [
                         options: [
                             "Mathematics", "Physics", "Chemistry", "Biology", "Computer Studies",
                             "Literature/Language Arts", "History/Social Studies", "Visual Arts",
-                            "Performing Arts", "Technical/Vocational Subjects", "Physical Education",
-                            "Languages (other than primary language)"
+                            "Performing Arts", "Psychology", "Physical Education",
+                            "Languages (other than primary language)", "Finance/Economics"
                         ]
                     }
                 ]
@@ -86,25 +86,30 @@ export default  [
                         type: "rating-scale"
                     },
                     {
+                        id: "political_science_ability",
+                        text: "Rate your ability in Political Science:",
+                        type: "rating-scale"
+                    },
+                    {
+                        id: "psychology_ability",
+                        text: "Rate your ability in Psychology:",
+                        type: "rating-scale"
+                    },
+                    {
+                        id: "finance_economics_ability",
+                        text: "Rate your ability in Finance/Economics:",
+                        type: "rating-scale"
+                    },
+                    {
                         id: "art_design_ability",
                         text: "Rate your ability in Art/Design:",
                         type: "rating-scale"
                     },
                     {
-                        id: "music_ability",
-                        text: "Rate your ability in Music:",
-                        type: "rating-scale"
-                    },
-                    {
-                        id: "physical_eq_ability",
+                        id: "physical_ed_ability",
                         text: "Rate your ability in Physical Education/Sports:",
                         type: "rating-scale"
                     },
-                    {
-                        id: "foreign_language_ability",
-                        text: "Rate your ability in Foreign Languages:",
-                        type: "rating-scale"
-                    }
                 ]
             }
         ]
@@ -177,9 +182,9 @@ export default  [
                     { id: "history_social_interest", text: "History/Social Studies", type: "rating-scale" },
                     { id: "geography_interest", text: "Geography", type: "rating-scale" },
                     { id: "art_design_interest", text: "Art/Design", type: "rating-scale" },
-                    { id: "music_interest", text: "Music", type: "rating-scale" },
+                    { id: "political_science_interest", text: "Political Science", type: "rating-scale" },
+                    { id: "finance_economics_interest", text: "Finance/Economics", type: "rating-scale" },
                     { id: "physical_ed_interest", text: "Physical Education", type: "rating-scale" },
-                    { id: "foreign_language_interest", text: "Foreign Languages", type: "rating-scale" }
                 ]
             }
         ]
@@ -276,7 +281,7 @@ export default  [
                 questions: [
                     { id: "learning_1", text: "I learn by reading/writing", type: "rating-scale" },
                     { id: "learning_2", text: "I remember visual information", type: "rating-scale" },
-                    { id: "learning_3", text: "I prefer listening", type: "rating-scale" },
+                    //{ id: "learning_3", text: "I prefer listening", type: "rating-scale" },
                     { id: "learning_4", text: "I learn hands-on", type: "rating-scale" },
                     { id: "learning_5", text: "I enjoy trial and error", type: "rating-scale" },
                     { id: "learning_6", text: "I prefer step-by-step", type: "rating-scale" }
@@ -322,16 +327,6 @@ export default  [
                 ]
             },
             {
-                description: "Relationship Values",
-                questions: [
-                    { id: "helping_others_value", text: "Helping others directly", type: "rating-scale" },
-                    { id: "colleague_rapport_value", text: "Working with liked colleagues", type: "rating-scale" },
-                    { id: "mentorship_value", text: "Having a mentor", type: "rating-scale" },
-                    { id: "networking_value", text: "Building professional connections", type: "rating-scale" },
-                    { id: "diversity_value", text: "Working with diverse people", type: "rating-scale" }
-                ]
-            },
-            {
                 description: "Practical Values",
                 questions: [
                     { id: "job_security_value", text: "Job security", type: "rating-scale" },
@@ -360,16 +355,6 @@ export default  [
         title: "External Factors",
         subsections: [
             {
-                description: "Family Influences",
-                questions: [
-                    { id: "family_expectations", text: "Family career expectations", type: "rating-scale" },
-                    { id: "family_tradition", text: "Family career tradition", type: "rating-scale" },
-                    { id: "family_support", text: "Family support for choices", type: "rating-scale" },
-                    { id: "family_responsibilities", text: "Family responsibilities impact", type: "rating-scale" },
-                    { id: "financial_considerations", text: "Family financial impact", type: "rating-scale" }
-                ]
-            },
-            {
                 description: "Geographic Preferences",
                 questions: [
                     {
@@ -385,41 +370,6 @@ export default  [
                     }
                 ]
             },
-            {
-                description: "Financial Considerations",
-                questions: [
-                    { id: "education_cost_concern", text: "Concern about education costs", type: "rating-scale" },
-                    { id: "need_income_during_edu", text: "Need income while studying", type: "rating-scale" },
-                    { id: "loan_willingness", text: "Willingness for student loans", type: "rating-scale" },
-                    { id: "salary_importance", text: "Importance of starting salary", type: "rating-scale" }
-                ]
-            },
-            {
-                description: "Labor Market Awareness",
-                questions: [
-                    {
-                        id: "job_market_knowledge",
-                        text: "Knowledge of job market trends",
-                        type: "multiple-choice",
-                        options: ["Very knowledgeable", "Somewhat", "Neutral", "Limited", "None"]
-                    },
-                    {
-                        id: "growth_industry_awareness",
-                        text: "Which industries will grow? (Select up to three)",
-                        type: "multiple-choice",
-                        multiple: true,
-                        options: [
-                            "Healthcare", "IT", "Renewable Energy", "Finance", "Education",
-                            "Engineering", "Creative Arts", "Hospitality", "Manufacturing", "Government"
-                        ]
-                    },
-                    {
-                        id: "future_demand_importance",
-                        text: "Importance of career future demand",
-                        type: "rating-scale"
-                    }
-                ]
-            }
         ]
     }
 ];
