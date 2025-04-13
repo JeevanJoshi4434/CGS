@@ -32,7 +32,7 @@ export default function Student() {
           <img src="./logo.png" alt="Logo" className="h-16 w-16 object-contain" />
         </div>
 
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Student Login</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Student Registration</h2>
 
         {[
           { label: 'Full Name', name: 'name', type: 'text' },
