@@ -23,10 +23,7 @@ export class QueueManager {
 
     protected static createQueue(queueName: string): Queue {
         const queue = new Queue(queueName, {
-            connection: {
-                host: process.env.REDIS_HOST,
-                port: parseInt(process.env.REDIS_PORT as string)
-            }
+            connection: RedisProvider.getInstance()
         });
         this.queues.set(queueName, queue);
         return queue;

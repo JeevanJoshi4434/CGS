@@ -5,7 +5,8 @@ import { asyncHandler } from '../utils/asyncHandler';
 const router = express.Router();
 const contestController = new ContestController();
 
-router.post('/get', asyncHandler(contestController.getContest.bind(contestController)));
+router.get('', asyncHandler(contestController.getContest.bind(contestController)));
+
 router.post('/login', asyncHandler(contestController.login.bind(contestController)));
 router.post('/submit', asyncHandler(contestController.submit.bind(contestController)));
 router.post('/create', asyncHandler(contestController.createContest.bind(contestController)));

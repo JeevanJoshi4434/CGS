@@ -5,6 +5,25 @@ import routes from './routes';
 import { createSecureServer } from './utils/secureServer';
 import { response } from './utils/response';
 
+if(process.env.MUTE_LOG_WARNING !== 'true') {
+  const originalConsoleLog = console.log;
+  console.log = function(...args) {
+
+    const stack = new Error().stack;
+    const callerInfo = stack?.split('\n')[2]?.trim() || '';
+    const match = callerInfo.match(/at\s+(.+)\s+\((.+):(\d+):(\d+)\)/i);
+    const caller = match ? `${match[2]}:${match[3]}` : 'unknown location';
+
+    originalConsoleLog.apply(console, [
+      `⚠️ WARNING: console.log detected in ${process.env.NODE_ENV !== 'development' ? 'production' : 'development'} code at`,
+      caller,
+      '- Remove before building!'
+    ]);
+
+    originalConsoleLog.apply(console, args);
+  };
+}
+
 dotenv.config();
 
 class App {
@@ -54,7 +73,7 @@ class App {
       console.error(`[ERROR] ${req.method} ${req.url} - ${err.message}`);
       response(res, 500, 'Internal Server Error');
     });
-    
+
   }
 
   public start(): void {

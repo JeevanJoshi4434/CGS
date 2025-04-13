@@ -15,14 +15,14 @@ export default class ContestController extends MemoryCache {
 
     public async getContest(req: Request, res: Response): Promise<Response> {
 
-            const { id, detailed=false }: { id: string, detailed: boolean } = req.body;
+            const { id, detailed="false" } = req.query;
             const data = await this.get(`contest-${id}`) as Contest;
             if (!data) return response(res, 404, 'Contest not found');
 
             const link = `token=${data._id}&&date=${data.date}&&test=true`;
             const sharableLink = `${process.env.BASE_URL}?${Base64.encode(link)}`;
 
-            return response(res, 200, 'Success', { detail: detailed ? data : null, link: sharableLink });
+            return response(res, 200, 'Success', { detail: detailed==="true" ? data : null, link: sharableLink });
     }
 
     public async login(req: Request, res: Response): Promise<Response> {
@@ -31,7 +31,7 @@ export default class ContestController extends MemoryCache {
             const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!emailRegex.test(email)) return response(res, 400, 'Invalid email');
 
-            if(await this.get(`contest-${id}-user`)){
+            if(await this.get(`contest-${email}-user`)){
                 return response(res, 400, 'Login already done', {redirect: process.env.BASE_URL}); // !!TODO: use middleware
             }
 
@@ -40,24 +40,40 @@ export default class ContestController extends MemoryCache {
             if (!data) return response(res, 404, 'Contest is not live yet');
 
             // Generate JWT
-            const sessionToken = jwt.sign({ email, phone_number }, process.env.JWT_SECRET as string, { expiresIn: '3h' });
+            const sessionToken = jwt.sign({ email, phone_number }, process.env.JWT_SECRET as string);
 
             // Generate login link
             const link = `token=${sessionToken}&&date=${data.date}&&started=true&&testId=${id}`;
             const sharableLink = `${process.env.BASE_URL}/start?${Base64.encode(link)}`;
 
+            const UserData: User & {timestamp: number} = {
+                id,
+                email,
+                phone_number,
+                DOB,
+                address,
+                school,
+                name,
+                timestamp: Date.now()
+            };
+
             // Store user data onto Redis Memory Cache
-            await this.set(`contest-${email}-user`, { data: Base64.encode(JSON.stringify(data)), token: sessionToken });
+            await this.set(`contest-${email}-user`, { data: Base64.encode(JSON.stringify(UserData)), token: sessionToken });
 
             return response(res, 200, 'Success', { contest: data, redirect: sharableLink, token: sessionToken });
     }
 
     public async submit(req: Request, res: Response): Promise<Response> {
-            const { sessionToken, data, contestId }: {
-                sessionToken: string,
+            const { data, contestId }: {
                 data: any,
                 contestId: string
             } = req.body;
+
+            const sessionToken = req.headers['sessiontoken'] as string | undefined;
+
+            if(!sessionToken) {
+                return response(res, 400, 'Session token is required', { redirect: process.env.BASE_URL });
+            }
 
             // Verify token
             const decoded = jwt.verify(sessionToken, process.env.JWT_SECRET as string) as any;
@@ -68,15 +84,21 @@ export default class ContestController extends MemoryCache {
             // Verify user
             const user = await this.get(`contest-${decoded.email}-user`) as { data: string, token: string };
             if (!user) {
-                return response(res, 400, 'Invalid token', { redirect: process.env.BASE_URL });
+                return response(res, 400, 'Login to continue', { redirect: process.env.BASE_URL });
             }
 
+            // Directly assign the Base64-encoded user data
+            const queueData = {
+                data,
+                additionalInfo: user.data
+            }
+            
             // Add job to queue
             const queueName = `contest-${contestId}-queue`;
             const job = await QueueManager.addJob(queueName, {
                 contestId,
                 userId: decoded.email,
-                submissionData: data,
+                submissionData: queueData,
                 timestamp: new Date()
             });
 
