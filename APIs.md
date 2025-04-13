@@ -142,7 +142,7 @@ Used to submit answers for a contest.
 }
 ```
 
-- **Invalid Session Token (400):**
+- **Invalid Session Token (401):**
 ```json
 {
   "success": false,

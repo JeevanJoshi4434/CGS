@@ -70,42 +70,12 @@ export default class ContestController extends MemoryCache {
                 contestId: string
             } = req.body;
 
-            let sessionToken = req.headers['sessiontoken'] as string | undefined;
-
-            if (!sessionToken) {
-                sessionToken = req.headers['authorization'] as string | undefined;
-
-                if (sessionToken && sessionToken.startsWith('Bearer ')) {
-                    sessionToken = sessionToken.substring(7);
-                }
-            }
-
-            if (!sessionToken && req.body.sessionToken) {
-                sessionToken = req.body.sessionToken;
-            }
-
-            if(!sessionToken) {
-                return response(res, 400, 'Session token is required', { redirect: process.env.BASE_URL });
-            }
-
-            console.log('Using token:', sessionToken.substring(0, 10) + '...');
-
-            let decoded;
-            try {
-                decoded = jwt.verify(sessionToken, process.env.JWT_SECRET as string) as any;
-            } catch (error) {
-                console.error('JWT verification error:', error);
-                return response(res, 401, 'Invalid token', { redirect: process.env.BASE_URL });
-            }
-
-            const user = await this.get(`contest:${contestId}:user:${decoded.email}`) as { data: string, token: string };
+            // Token and user are already validated by middleware
+            const userEmail = (req.user as any).email;
+            // Verify user is registered for this contest
+            const user = await this.get(`contest:${contestId}:user:${userEmail}`) as { data: string, token: string };
             if (!user) {
                 return response(res, 400, 'Login to continue', { redirect: process.env.BASE_URL });
-            }
-
-            if (user.token !== sessionToken) {
-                console.log('Token mismatch: Redis token does not match request token');
-                console.log('Redis token (first 10 chars):', user.token.substring(0, 10) + '...');
             }
 
             const queueData = {
@@ -117,7 +87,7 @@ export default class ContestController extends MemoryCache {
             const queueName = `contest_${contestId}_queue`;
             const job = await QueueManager.addJob(queueName, {
                 contestId,
-                userId: decoded.email,
+                userId: userEmail,
                 submissionData: queueData,
                 timestamp: new Date()
             });
