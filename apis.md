@@ -31,7 +31,7 @@ Authenticate an admin user.
 ```
 
 ## User Management
-
+@Depricated use TS server one
 ### User Registration
 Register a new user.
 
