@@ -7,5 +7,5 @@ type Admin struct {
 	Name      string             `json:"name" bson:"name"`
 	Email     string             `json:"email" bson:"email"`
 	Password  string             `json:"password" bson:"password"`
-	ContestId string             `json:"contest_id" bson:"contest_id"`
+	Contest   string             `json:"contest" bson:"contest"`
 }

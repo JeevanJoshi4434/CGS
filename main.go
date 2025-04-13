@@ -35,6 +35,7 @@ func main() {
 	api.UserRoutes(router.Group(baseRoute))
 	api.ContestRoutes(router.Group(baseRoute))
 	api.TestLink(router.Group(baseRoute))
+	api.AdminRoutes(router.Group(baseRoute))
 
 	// Start server
 	if err := router.Run(":7070"); err != nil {
