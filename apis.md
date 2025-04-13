@@ -1,24 +1,29 @@
-# API Documentation
+# 📘 API Documentation
 
 ## Base URL
 All endpoints are prefixed with `/api/v1`
 
-## Authentication
+## 🔐 Authentication
 
 ### Admin Login
 Authenticate an admin user.
 
 **Endpoint:** `POST /admin/login`
 
-**Request Body:**
+<details>
+  <summary>📤 Request Body</summary>
+
 ```json
 {
     "email": "admin@example.com",
     "password": "password123"
 }
 ```
+</details>
 
-**Response (Success - 200 OK):**
+<details>
+  <summary>✅ Success Response (200)</summary>
+
 ```json
 {
     "message": "Login successful",
@@ -29,15 +34,38 @@ Authenticate an admin user.
     }
 }
 ```
+</details>
 
-## User Management
+<details>
+  <summary>⚠️ Error Responses</summary>
 
-### User Registration
+- **Invalid Request (400):**
+```json
+{
+    "error": "Invalid request body"
+}
+```
+
+- **Invalid Credentials (401):**
+```json
+{
+    "error": "Invalid email or password"
+}
+```
+</details>
+
+## 👥 User Management
+
+### User Registration (Deprecated)
+> ⚠️ **This endpoint is deprecated. Use the TypeScript server for user registration instead.**
+
 Register a new user.
 
 **Endpoint:** `POST /user/register`
 
-**Request Body:**
+<details>
+  <summary>📤 Request Body</summary>
+
 ```json
 {
     "name": "User Name",
@@ -48,8 +76,11 @@ Register a new user.
     "school": "User School"
 }
 ```
+</details>
 
-**Response (Success - 201 Created):**
+<details>
+  <summary>✅ Success Response (201)</summary>
+
 ```json
 {
     "message": "User created successfully",
@@ -65,15 +96,36 @@ Register a new user.
     }
 }
 ```
+</details>
 
-## Contest Management
+<details>
+  <summary>⚠️ Error Responses</summary>
+
+- **Email Already Exists (409):**
+```json
+{
+    "error": "Email already exists"
+}
+```
+
+- **Invalid Request (400):**
+```json
+{
+    "error": "Invalid request body"
+}
+```
+</details>
+
+## 🏆 Contest Management
 
 ### Create Contest
 Create a new contest.
 
 **Endpoint:** `POST /contests`
 
-**Request Body:**
+<details>
+  <summary>📤 Request Body</summary>
+
 ```json
 {
     "question_id": "question_id_here",
@@ -81,8 +133,11 @@ Create a new contest.
     "date": "2024-03-20"
 }
 ```
+</details>
 
-**Response (Success - 201 Created):**
+<details>
+  <summary>✅ Success Response (201)</summary>
+
 ```json
 {
     "message": "Contest created successfully",
@@ -90,13 +145,16 @@ Create a new contest.
     "date": "2024-03-20"
 }
 ```
+</details>
 
 ### Get Contest
 Get contest details.
 
 **Endpoint:** `GET /contests/:id`
 
-**Response (Success - 200 OK):**
+<details>
+  <summary>✅ Success Response (200)</summary>
+
 ```json
 {
     "id": "contest_id_here",
@@ -106,23 +164,47 @@ Get contest details.
     "created_at": "2024-03-20T10:00:00Z"
 }
 ```
+</details>
 
-## Test Link Management
+<details>
+  <summary>⚠️ Error Responses</summary>
+
+- **Contest Not Found (404):**
+```json
+{
+    "error": "Contest not found"
+}
+```
+
+- **Invalid Contest ID (400):**
+```json
+{
+    "error": "Invalid contest ID"
+}
+```
+</details>
+
+## 🔗 Test Link Management
 
 ### Generate Test Link
 Generate a new test link for a contest.
 
 **Endpoint:** `POST /testlink/:id`
 
-**Request Body:**
+<details>
+  <summary>📤 Request Body</summary>
+
 ```json
 {
     "name": "Test Name",
     "location": "Test Location"
 }
 ```
+</details>
 
-**Response (Success - 200 OK):**
+<details>
+  <summary>✅ Success Response (200)</summary>
+
 ```json
 {
     "message": "Test link generated successfully",
@@ -130,15 +212,10 @@ Generate a new test link for a contest.
     "contest_id": "contest_id_here"
 }
 ```
+</details>
 
-## Error Codes
-- 400: Bad Request - Invalid request body or parameters
-- 401: Unauthorized - Invalid credentials
-- 404: Not Found - Resource not found
-- 409: Conflict - Resource already exists (e.g., email already registered)
-- 500: Internal Server Error - Server-side error
+## 📝 Notes
 
-## Notes
 - All requests and responses are in JSON format
 - Timestamps are in ISO 8601 format (UTC)
 - MongoDB is used as the primary database
