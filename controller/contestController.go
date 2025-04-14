@@ -4,7 +4,8 @@ import (
 	"context"
 	"net/http"
 	"time"
-
+	"encoding/base64"
+    "os" 
 
 	
 	"go.mongodb.org/mongo-driver/bson"
@@ -30,7 +31,7 @@ func (cc *ContestController) CreateContest(c *gin.Context) {
 	}
 
 	// Set creation timestamp
-	currentTime := time.Now()
+	currentTime := time.Now() // set it to selected date and time for contest
 	contest.CreatedAt = currentTime.Format(time.RFC3339)
 	contest.Date = currentTime.Format("2006-01-02")
 
@@ -56,10 +57,16 @@ func (cc *ContestController) CreateContest(c *gin.Context) {
 		return
 	}
 
+	baseURL := os.Getenv("BASE_URL")
+	queryString := "token=" + contest.Id.Hex() + "&&date=" + contest.Date + "&&test=true"
+	encoded := base64.StdEncoding.EncodeToString([]byte(queryString))
+	sharableLink := baseURL + "/student?" + encoded
+
 	c.JSON(http.StatusCreated, gin.H{
 		"message":    "Contest created successfully",
 		"contest_id": contest.Id.Hex(),
 		"date":       contest.Date,
+		"SharebleLink": sharableLink,
 	})
 }
 

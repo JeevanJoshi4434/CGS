@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-
+	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/gin-contrib/cors"
 	"main.go/api"
 	"main.go/db"
 )
@@ -29,6 +30,17 @@ func init() {
 
 func main() {
 	router := gin.Default()
+
+	// CORS setup
+	config := cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:4000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+	router.Use(cors.New(config))
+
 	baseRoute := "api/v1"
 
 	// Register routes
@@ -42,7 +54,7 @@ func main() {
 		log.Fatal("Failed to start server:", err)
 	}
 
-	// Disconnect from databases when the application exits
+	// Cleanup
 	defer db.Disconnect()
 	defer db.DisconnectRedis()
 }
