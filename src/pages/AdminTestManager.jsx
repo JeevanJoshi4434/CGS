@@ -62,7 +62,7 @@ const handleDeleteTest = (id) => {
 };
 
 const copyToClipboard = (link) => {
-    navigator.clipboard.writeText(`${window.location.origin}/${link}`);
+    navigator.clipboard.writeText(`${link}`);
     alert("Test link copied to clipboard!");
 };
 

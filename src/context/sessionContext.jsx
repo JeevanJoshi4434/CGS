@@ -26,5 +26,4 @@ export const SessionProvider = ({ children }) => {
     );
 };
 
-// Custom hook for easier usage
 export const useSession = () => useContext(SessionContext);
