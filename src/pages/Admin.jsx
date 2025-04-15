@@ -23,8 +23,8 @@ export default function Admin() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/admin/login', {
-        username: formData.adminName, 
+      const response = await axios.post('http://localhost:7070/api/admin/login', {
+        username: formData.adminName,
         email: formData.email,
         password: formData.password
       }, {
@@ -33,18 +33,18 @@ export default function Admin() {
         }
       });
 
-      
+
       if (response.status === 200) {
-        
+
         if (response.data.token) {
           localStorage.setItem('adminToken', response.data.token);
         }
 
-        
+
         navigate('/manage');
       }
     } catch (err) {
-      
+
       const errorMessage = err.response?.data?.error ||
         err.response?.data?.message ||
         'Login failed. Please check your credentials.';
@@ -60,14 +60,14 @@ export default function Admin() {
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 space-y-6"
       >
-        
+
         <div className="flex justify-center">
           <img src="/logo.png" alt="Logo" className="h-16 w-16 object-contain" />
         </div>
 
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Admin Login</h2>
 
-      
+
         {error && (
           <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm">
             {error}
