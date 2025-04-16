@@ -1,0 +1,178 @@
+{
+    "parameter_ranges": {
+      "math_ability": [1, 5],
+      "physics_ability": [1, 5],
+      "chemistry_ability": [1, 5],
+      "biology_ability": [1, 5],
+      "cs_programming_ability": [1, 5],
+      "realistic_score": [6, 30],
+      "investigative_score": [6, 30],
+      "artistic_score": [6, 30],
+      "social_score": [6, 30],
+      "enterprising_score": [6, 30],
+      "conventional_score": [6, 30],
+      "verbal_reasoning_score": [4, 20],
+      "numerical_reasoning_score": [4, 20],
+      "spatial_reasoning_score": [4, 20],
+      "logical_reasoning_score": [4, 20],
+      "creative_thinking_score": [4, 20],
+      "openness_score": [4, 20],
+      "conscientiousness_score": [4, 20],
+      "extraversion_score": [4, 20],
+      "agreeableness_score": [4, 20],
+      "emotional_stability_score": [4, 20]
+    },
+    "career_fields": [
+      {
+        "name": "MEDICAL",
+        "parameters": [
+          {"parameter": "biology_ability", "weight": 0.20},
+          {"parameter": "chemistry_ability", "weight": 0.15},
+          {"parameter": "biology_interest", "weight": 0.10},
+          {"parameter": "investigative_score", "weight": 0.15},
+          {"parameter": "helping_others_value", "weight": 0.10},
+          {"parameter": "conscientiousness_score", "weight": 0.08},
+          {"parameter": "emotional_stability_score", "weight": 0.07},
+          {"parameter": "detail_oriented_preference", "weight": 0.05},
+          {"parameter": "structured_task_preference", "weight": 0.05},
+          {"parameter": "job_security_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "MECHANICAL",
+        "parameters": [
+          {"parameter": "physics_ability", "weight": 0.25},
+          {"parameter": "math_ability", "weight": 0.15},
+          {"parameter": "realistic_score", "weight": 0.20},
+          {"parameter": "spatial_reasoning_score", "weight": 0.15},
+          {"parameter": "hands_on_learning_preference", "weight": 0.10},
+          {"parameter": "structured_task_preference", "weight": 0.05},
+          {"parameter": "physical_activity_value", "weight": 0.05},
+          {"parameter": "concrete_tasks_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "ELECTRICAL",
+        "parameters": [
+          {"parameter": "physics_ability", "weight": 0.25},
+          {"parameter": "math_ability", "weight": 0.20},
+          {"parameter": "logical_reasoning_score", "weight": 0.20},
+          {"parameter": "realistic_score", "weight": 0.10},
+          {"parameter": "detail_oriented_preference", "weight": 0.10},
+          {"parameter": "structured_task_preference", "weight": 0.05},
+          {"parameter": "numerical_reasoning_score", "weight": 0.05},
+          {"parameter": "job_security_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "COMPUTER_SCIENCE",
+        "parameters": [
+          {"parameter": "cs_programming_ability", "weight": 0.25},
+          {"parameter": "math_ability", "weight": 0.15},
+          {"parameter": "logical_reasoning_score", "weight": 0.20},
+          {"parameter": "investigative_score", "weight": 0.15},
+          {"parameter": "creative_thinking_score", "weight": 0.10},
+          {"parameter": "structured_task_preference", "weight": 0.05},
+          {"parameter": "income_potential_value", "weight": 0.05},
+          {"parameter": "future_demand_importance", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "BUSINESS",
+        "parameters": [
+          {"parameter": "enterprising_score", "weight": 0.25},
+          {"parameter": "numerical_reasoning_score", "weight": 0.15},
+          {"parameter": "leadership_preference", "weight": 0.15},
+          {"parameter": "networking_value", "weight": 0.10},
+          {"parameter": "competitive_activity_preference", "weight": 0.10},
+          {"parameter": "salary_importance", "weight": 0.10},
+          {"parameter": "extraversion_score", "weight": 0.05},
+          {"parameter": "advancement_value", "weight": 0.05},
+          {"parameter": "recognition_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "LAW",
+        "parameters": [
+          {"parameter": "verbal_reasoning_score", "weight": 0.25},
+          {"parameter": "writing_composition_ability", "weight": 0.20},
+          {"parameter": "social_score", "weight": 0.15},
+          {"parameter": "agreeableness_score", "weight": 0.10},
+          {"parameter": "structured_task_preference", "weight": 0.10},
+          {"parameter": "recognition_value", "weight": 0.05},
+          {"parameter": "networking_value", "weight": 0.05},
+          {"parameter": "impact_value", "weight": 0.05},
+          {"parameter": "job_security_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "HOSPITALITY",
+        "parameters": [
+          {"parameter": "social_score", "weight": 0.25},
+          {"parameter": "extraversion_score", "weight": 0.20},
+          {"parameter": "team_collaboration_value", "weight": 0.15},
+          {"parameter": "fast_paced_preference", "weight": 0.10},
+          {"parameter": "helping_others_value", "weight": 0.10},
+          {"parameter": "variety_value", "weight": 0.05},
+          {"parameter": "colleague_rapport_value", "weight": 0.05},
+          {"parameter": "travel_opportunity_value", "weight": 0.05},
+          {"parameter": "flexibility_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "EDUCATION",
+        "parameters": [
+          {"parameter": "social_score", "weight": 0.25},
+          {"parameter": "verbal_reasoning_score", "weight": 0.20},
+          {"parameter": "helping_others_value", "weight": 0.15},
+          {"parameter": "conscientiousness_score", "weight": 0.10},
+          {"parameter": "mentorship_value", "weight": 0.10},
+          {"parameter": "patience_value", "weight": 0.05},
+          {"parameter": "growth_learning_value", "weight": 0.05},
+          {"parameter": "work_life_balance_value", "weight": 0.05},
+          {"parameter": "impact_value", "weight": 0.05}
+        ]
+      },
+
+      {
+        "name": "ARCHITECTURE",
+        "parameters": [
+          {"parameter": "spatial_reasoning_score", "weight": 0.25},
+          {"parameter": "art_design_ability", "weight": 0.20},
+          {"parameter": "realistic_score", "weight": 0.15},
+          {"parameter": "creative_thinking_score", "weight": 0.15},
+          {"parameter": "structured_task_preference", "weight": 0.10},
+          {"parameter": "detail_oriented_preference", "weight": 0.05},
+          {"parameter": "autonomy_value", "weight": 0.05},
+          {"parameter": "impact_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "AGRICULTURE",
+        "parameters": [
+          {"parameter": "biology_ability", "weight": 0.25},
+          {"parameter": "realistic_score", "weight": 0.20},
+          {"parameter": "physical_activity_value", "weight": 0.15},
+          {"parameter": "low_stress_value", "weight": 0.10},
+          {"parameter": "environment_preference", "weight": 0.10},
+          {"parameter": "hands_on_learning_preference", "weight": 0.05},
+          {"parameter": "independence_value", "weight": 0.05},
+          {"parameter": "job_security_value", "weight": 0.05},
+          {"parameter": "growth_learning_value", "weight": 0.05}
+        ]
+      },
+      {
+        "name": "PHARMA",
+        "parameters": [
+          {"parameter": "chemistry_ability", "weight": 0.25},
+          {"parameter": "biology_ability", "weight": 0.20},
+          {"parameter": "investigative_score", "weight": 0.20},
+          {"parameter": "detail_oriented_preference", "weight": 0.10},
+          {"parameter": "conscientiousness_score", "weight": 0.10},
+          {"parameter": "structured_task_preference", "weight": 0.05},
+          {"parameter": "job_security_value", "weight": 0.05},
+          {"parameter": "growth_learning_value", "weight": 0.05}
+        ]
+      }
+    ]
+  }

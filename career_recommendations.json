@@ -1,0 +1,112 @@
+[
+  {
+    "student_info": {
+      "name": "John Doe",
+      "age": 17,
+      "current_education": "12th Grade"
+    },
+    "top_careers": [
+      {
+        "career": "AGRICULTURE",
+        "score": 50.0,
+        "key_strengths": [
+          "Low Stress Value",
+          "Biology Ability",
+          "Realistic Score"
+        ]
+      },
+      {
+        "career": "MEDICAL",
+        "score": 0.0,
+        "key_strengths": [
+          "Biology Ability",
+          "Chemistry Ability",
+          "Biology Interest"
+        ]
+      },
+      {
+        "career": "MECHANICAL",
+        "score": 0.0,
+        "key_strengths": [
+          "Physics Ability",
+          "Math Ability",
+          "Realistic Score"
+        ]
+      },
+      {
+        "career": "ELECTRICAL",
+        "score": 0.0,
+        "key_strengths": [
+          "Physics Ability",
+          "Math Ability",
+          "Logical Reasoning Score"
+        ]
+      },
+      {
+        "career": "COMPUTER_SCIENCE",
+        "score": 0.0,
+        "key_strengths": [
+          "Cs Programming Ability",
+          "Math Ability",
+          "Logical Reasoning Score"
+        ]
+      }
+    ],
+    "assessment_date": "2023-11-15"
+  },
+  {
+    "student_info": {
+      "name": "Alice Smith",
+      "age": 16,
+      "current_education": "11th Grade"
+    },
+    "top_careers": [
+      {
+        "career": "AGRICULTURE",
+        "score": 37.0,
+        "key_strengths": [
+          "Biology Ability",
+          "Job Security Value",
+          "Physical Activity Value"
+        ]
+      },
+      {
+        "career": "ELECTRICAL",
+        "score": 36.0,
+        "key_strengths": [
+          "Job Security Value",
+          "Physics Ability",
+          "Math Ability"
+        ]
+      },
+      {
+        "career": "MEDICAL",
+        "score": 35.0,
+        "key_strengths": [
+          "Biology Ability",
+          "Job Security Value",
+          "Chemistry Ability"
+        ]
+      },
+      {
+        "career": "PHARMA",
+        "score": 35.0,
+        "key_strengths": [
+          "Biology Ability",
+          "Job Security Value",
+          "Chemistry Ability"
+        ]
+      },
+      {
+        "career": "COMPUTER_SCIENCE",
+        "score": 33.8,
+        "key_strengths": [
+          "Income Potential Value",
+          "Math Ability",
+          "Cs Programming Ability"
+        ]
+      }
+    ],
+    "assessment_date": "2023-11-16"
+  }
+]
