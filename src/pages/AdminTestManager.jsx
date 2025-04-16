@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { FiPlus, FiLink, FiTrash2, FiX, FiCopy } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react';
+import { FiPlus, FiLink, FiTrash2, FiX, FiCopy, FiDownload } from 'react-icons/fi';
 import axios from 'axios';
 
 const AdminTestManager = () => {
     const [tests, setTests] = useState([
-        { id: 1, name: "Midterm Mathematics", location: "Room 101", link: "test/1", date: "2023-05-15" },
-        { id: 2, name: "Science Quiz", location: "Lab 3", link: "test/2", date: "2023-06-20" },
     ]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newTest, setNewTest] = useState({ name: "", location: "" });
@@ -37,15 +35,16 @@ const AdminTestManager = () => {
 
             // Call your backend to generate the test link
             const response = await axios.post(`${import.meta.env.VITE_GO_URL}/api/v1/contests`, {
-                testName: newTest.name,
-                location: newTest.location
+                Name: newTest.name,
+                Location: newTest.location,
+                
             });
 
-            if (!response.data.SharebleLink) return;
+            if (!response.data.shareableLink) return;
             // Update the test with the generated link
             setTests(prevTests => prevTests.map(test =>
                 test.id === testId
-                    ? { ...test, link: response.data.SharebleLink , isGenerating: false }
+                    ? { ...test, link: response.data.shareableLink , isGenerating: false }
                         : test
                 ));
         } catch (err) {
@@ -65,6 +64,66 @@ const copyToClipboard = (link) => {
     navigator.clipboard.writeText(`${link}`);
     alert("Test link copied to clipboard!");
 };
+const handleDownloadResults = async (contestId) => {
+    try {
+        console.log("ID:", contestId);
+        const response = await axios.get(`${import.meta.env.VITE_PY_URL}/api/v1/process`, {
+            params: { id: contestId },
+            responseType: 'blob', // Important for file download
+        });
+
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `result_${contestId}.csv`);
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup after a short delay
+        setTimeout(() => {
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    } catch (error) {
+        console.error("Error downloading results:", error);
+    }
+};
+
+const handlePrevTest = async () => {
+    setLoading(true); // Optional: show loading while fetching
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_GO_URL}/api/v1/admin/contest`);
+  
+      const contests = response?.data?.contests;
+  
+      if (!contests || !contests.length || !contests[0]?.id) {
+        throw new Error("Invalid response from server");
+      }
+  
+      const data = contests.map(contest => ({
+        id: contest.id,
+        name: contest.name || "",
+        location:contest.location || "",
+        link: `${import.meta.env.VITE_BASE_URL}/start?${btoa(`token=${contest.id}&&date=${contest.date}&&test=true`)}`,
+        date: contest.date,
+        isGenerating: false
+      }));
+  
+      // Add to existing state
+      setTests(prev => [...prev, ...data]);
+  
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to generate test link');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    handlePrevTest();
+  }, []);
+  
 
 return (
     <div className="min-h-screen bg-gray-50">
@@ -184,12 +243,12 @@ return (
                                                         </button>
                                                     )}
                                                     <button
-                                                        onClick={() => handleDeleteTest(test.id)}
+                                                        onClick={()=>handleDownloadResults(test.id)}
                                                         className="p-2 text-red-600 hover:bg-red-50 rounded-md"
                                                         title="Delete test"
                                                         disabled={test.isGenerating}
                                                     >
-                                                        <FiTrash2 size={18} />
+                                                        <FiDownload  size={18} />
                                                     </button>
                                                 </div>
                                             </td>

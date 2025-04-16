@@ -23,7 +23,7 @@ export default function Admin() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:7070/api/admin/login', {
+      const response = await axios.post('http://localhost:7070/api/v1/admin/login', {
         username: formData.adminName,
         email: formData.email,
         password: formData.password
