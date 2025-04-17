@@ -23,52 +23,8 @@ func NewContestController() *ContestController {
 	return &ContestController{}
 }
 
-func (cc *ContestController) CreateContest(c *gin.Context) {
-	var contest models.Contest
-	if err := c.ShouldBindJSON(&contest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
 
-	// Set creation timestamp
-	currentTime := time.Now() // set it to selected date and time for contest
-	contest.CreatedAt = currentTime.Format(time.RFC3339)
-	contest.Date = currentTime.Format("2006-01-02")
 
-	// Insert contest into MongoDB
-	collection := db.Database.Collection("contests")
-	res, err := collection.InsertOne(context.Background(), contest)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create contest"})
-		return
-	}
-
-	// Convert ObjectID to string
-	contest.Id = res.InsertedID.(primitive.ObjectID)
-
-	// Store contest in Redis
-	if err := helper.StoreContest(c.Request.Context(), &contest); err != nil {
-		// Log error but don't fail the request
-		c.JSON(http.StatusCreated, gin.H{
-			"message":    "Contest created successfully (Redis cache failed)",
-			"contest_id": contest.Id.Hex(),
-			"date":       contest.Date,
-		})
-		return
-	}
-
-	baseURL := os.Getenv("BASE_URL")
-	queryString := "token=" + contest.Id.Hex() + "&&date=" + contest.Date + "&&test=true"
-	encoded := base64.StdEncoding.EncodeToString([]byte(queryString))
-	sharableLink := baseURL + "/student?" + encoded
-
-	c.JSON(http.StatusCreated, gin.H{
-		"message":    "Contest created successfully",
-		"contest_id": contest.Id.Hex(),
-		"date":       contest.Date,
-		"SharebleLink": sharableLink,
-	})
-}
 
 func (cc *ContestController) GetContest(c *gin.Context) {
 	contestID := c.Param("id")
@@ -102,4 +58,61 @@ func (cc *ContestController) GetContest(c *gin.Context) {
 	helper.StoreContest(c.Request.Context(), contest)
 
 	c.JSON(http.StatusOK, contest)
+}
+
+
+func (cc *ContestController) CreateContest(c *gin.Context) {
+	var contest models.Contest
+	if err := c.ShouldBindJSON(&contest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Use provided date or fallback to current time
+	parsedDate, err := time.Parse("2006-01-02", contest.Date)
+	if err != nil {
+		parsedDate = time.Now()
+	}
+
+	// Set proper formats
+	contest.CreatedAt = parsedDate.Format(time.RFC3339)
+	contest.Date = parsedDate.Format("2006-01-02")
+
+	// Insert contest into MongoDB
+	collection := db.Database.Collection("contests")
+	res, err := collection.InsertOne(context.Background(), contest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create contest"})
+		return
+	}
+
+	// Set the returned ID
+	contest.Id = res.InsertedID.(primitive.ObjectID)
+
+	// Store in Redis
+	if err := helper.StoreContest(c.Request.Context(), &contest); err != nil {
+		c.JSON(http.StatusCreated, gin.H{
+			"message":     "Contest created successfully (Redis cache failed)",
+			"contest_id":  contest.Id.Hex(),
+			"date":        contest.Date,
+			"shareableLink": generateShareableLink(contest.Id.Hex(), contest.Date),
+		})
+		return
+	}
+
+	// Return success
+	c.JSON(http.StatusCreated, gin.H{
+		"message":     "Contest created successfully",
+		"contest_id":  contest.Id.Hex(),
+		"date":        contest.Date,
+		"shareableLink": generateShareableLink(contest.Id.Hex(), contest.Date),
+	})
+}
+
+
+func generateShareableLink(id, date string) string {
+	baseURL := os.Getenv("BASE_URL")
+	queryString := "token=" + id + "&&date=" + date + "&&test=true"
+	encoded := base64.StdEncoding.EncodeToString([]byte(queryString))
+	return baseURL + "/student?" + encoded
 }

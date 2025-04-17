@@ -9,4 +9,5 @@ import (
 func AdminRoutes(router *gin.RouterGroup) {
 	adminController := controller.NewAdminController()
 	router.POST("/admin/login", adminController.Login)
+	router.GET("/admin/contest", adminController.GetContest)
 } 

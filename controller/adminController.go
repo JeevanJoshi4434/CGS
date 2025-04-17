@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"net/http"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"main.go/db"
 	"main.go/models"
@@ -16,6 +15,32 @@ type AdminController struct{}
 func NewAdminController() *AdminController {
 	return &AdminController{}
 }
+
+func (ac *AdminController) GetContest(c *gin.Context) {
+	// Access collection
+	collection := db.Database.Collection("contests")
+
+	// Find all contests
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch contests"})
+		return
+	}
+	defer cursor.Close(context.Background())
+
+	var contests []models.Contest
+	if err := cursor.All(context.Background(), &contests); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse contests"})
+		return
+	}
+
+	// Return contests
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "Contests fetched successfully",
+		"contests": contests,
+	})
+}
+
 
 func (ac *AdminController) Login(c *gin.Context) {
 	var loginRequest struct {
