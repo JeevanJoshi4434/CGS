@@ -263,7 +263,7 @@ const TestPage = () => {
                   Page {currentPage + 1} of {totalPages}
                 </span>
 
-                {currentPage ? (
+                {currentPage==18 ? (
                   <button
                     onClick={calculateScore}
                     className="w-full sm:w-auto px-6 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
