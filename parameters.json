@@ -22,6 +22,35 @@
       "agreeableness_score": [4, 20],
       "emotional_stability_score": [4, 20]
     },
+
+
+    "parameter_categories": {
+      "math_ability": "Academic",
+      "physics_ability": "Academic",
+      "chemistry_ability": "Academic",
+      "biology_ability": "Academic",
+      "cs_programming_ability": "Academic",
+
+      "realistic_score": "Interest",
+      "investigative_score": "Interest",
+      "artistic_score": "Interest",
+      "social_score": "Interest",
+      "enterprising_score": "Interest",
+      "conventional_score": "Interest",
+
+      "verbal_reasoning_score": "Aptitude",
+      "numerical_reasoning_score": "Aptitude",
+      "spatial_reasoning_score": "Aptitude",
+      "logical_reasoning_score": "Aptitude",
+      "creative_thinking_score": "Aptitude",
+
+      "openness_score": "Personality",
+      "conscientiousness_score": "Personality",
+      "extraversion_score": "Personality",
+      "agreeableness_score": "Personality",
+      "emotional_stability_score": "Personality"
+    },
+
     "career_fields": [
       {
         "name": "MEDICAL",

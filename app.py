@@ -169,10 +169,10 @@ def process_queue():
     processed_results = []
     for student_data in student_data_list:
         result = system.generate_recommendations(student_data, top_n=5)
+        processed_responses = system.process_student_responses(student_data["responses"])
         image_path = system.plot_career_scores(
-            recommendations=system.calculate_career_scores(
-                system.process_student_responses(student_data["responses"])
-            ),
+            recommendations=system.calculate_career_scores(processed_responses),
+            normalized_scores=processed_responses,
             student_name=student_data["name"]
         )
         result["graph_path"] = image_path
