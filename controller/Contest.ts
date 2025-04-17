@@ -25,6 +25,8 @@ export default class ContestController extends MemoryCache {
             return response(res, 200, 'Success', { detail: detailed==="true" ? data : null, link: sharableLink });
     }
 
+    
+
     public async login(req: Request, res: Response): Promise<Response> {
             const { id, email, phone_number, DOB, address, school, name }: User = req.body;
 

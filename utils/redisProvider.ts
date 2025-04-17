@@ -10,7 +10,7 @@ class RedisProvider {
     if (!RedisProvider.instance) {
       const connection: RedisOptions = {
         host: process.env.REDIS_HOST || 'localhost',
-        port: Number(process.env.REDIS_PORT) || 6379,
+        port: Number(process.env.REDIS_PORT) || 10001,
         maxRetriesPerRequest: null,
         db: 0,
       };
