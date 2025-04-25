@@ -77,6 +77,7 @@ export default class OTPController extends MemoryCache {
                 failures.push({ error: err.message || 'Unknown error while parsing job data' });
             }
 
+            numbers = numbers.slice(0, -1);
             const resultLink = `${process.env.BASE_URL}/result/view?${Base64.encode(`testId=${contestId}`)}`;
             const message = `Your CGS test result is ready. Download from: ${resultLink}`;
             console.log(message);
