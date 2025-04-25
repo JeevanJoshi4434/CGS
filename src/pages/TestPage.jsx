@@ -119,7 +119,7 @@ const TestPage = () => {
 
       const result = await res.json();
       if (result.success) {
-        alert('Submission queued successfully');
+        alert('Submitted successfully');
         resetAnswers(testId);
         navigate('/student');
       } else {

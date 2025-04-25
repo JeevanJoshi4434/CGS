@@ -3,6 +3,7 @@ import Student from './pages/Student';
 import Admin from './pages/Admin';
 import TestPage from './pages/TestPage';
 import AdminTestManager from './pages/AdminTestManager';
+import ViewResults from './pages/ResultsView';
 import { SessionProvider } from './context/sessionContext'; // Import the context
 import './App.css';
 
@@ -28,6 +29,14 @@ function App() {
             element={
               <SessionProvider>
                 <TestPage />
+              </SessionProvider>
+            }
+          />
+          <Route
+            path="/result/view"
+            element={
+              <SessionProvider>
+                <ViewResults />
               </SessionProvider>
             }
           />
