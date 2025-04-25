@@ -28,7 +28,7 @@ export default function Admin() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:7070/api/v1/admin/login', {
+      const response = await axios.post(`${import.meta.env.VITE_GO_URL}/api/v1/admin/login`, {
         username: formData.adminName,
         email: formData.email,
         password: formData.password
