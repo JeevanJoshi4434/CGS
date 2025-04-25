@@ -35,6 +35,21 @@ export class QueueManager {
         return this.createQueue(queueName);
     }
 
+    public static async getQueue(queueName: string): Promise<Queue | null> {
+        const inMemoryQueue = this.queues.get(queueName);
+        if (inMemoryQueue) return inMemoryQueue;
+
+        const exists = await this.redis.exists(`bull:${queueName}:meta`);
+        console.log(exists ? `exists ${queueName} queue in redis ${exists}` : 'not exists');
+        if (!exists) return null;
+
+        const queue = new Queue(queueName, {
+            connection: RedisProvider.getInstance()
+        });
+        this.queues.set(queueName, queue);
+        return queue;
+    }
+
     public static async addJob<T>(queueName: string, data: T): Promise<Job<T>> {
         // Check if the queue name follows the contest_{id}_queue pattern
         if (queueName.startsWith('contest_') && queueName.endsWith('_queue')) {
