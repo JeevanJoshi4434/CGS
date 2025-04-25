@@ -14,18 +14,21 @@ from flask import send_from_directory
 
 
 app = Flask(__name__)
-
-CORS(app, origins=[
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://yourfrontenddomain.com"
-])
+CORS(app)
 
 # Redis connection
 redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 # Load assessment system
 system = CareerAssessmentSystem("parameters.json")
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    return response
+
 
 
 def convert_redis_data_to_student_data(queue_data):
@@ -259,4 +262,4 @@ def download_report():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
