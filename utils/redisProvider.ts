@@ -1,5 +1,7 @@
 import { Redis } from 'ioredis';
 import { RedisOptions } from 'ioredis';
+import dotenv from 'dotenv';
+dotenv.config();
 
 class RedisProvider {
   private static instance: Redis;
