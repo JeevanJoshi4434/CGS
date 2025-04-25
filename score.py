@@ -110,7 +110,7 @@ class CareerAssessmentSystem:
             "assessment_date": new_data.get("assessment_date")
         }
 
-    def plot_career_scores(self, recommendations: List[Dict[str, Any]], normalized_scores: Dict[str, float], student_name: str, top_n: int = 5) -> str:
+    def plot_career_scores(self, recommendations: List[Dict[str, Any]], normalized_scores: Dict[str, float], student_name: str, contestId: str, phone_number: str, top_n: int = 5) -> str:
 
         import matplotlib.pyplot as plt
         from matplotlib.backends.backend_pdf import PdfPages
@@ -118,7 +118,7 @@ class CareerAssessmentSystem:
 
         output_dir = "career_graphs"
         os.makedirs(output_dir, exist_ok=True)
-        filename = os.path.join(output_dir, f"{student_name.replace(' ', '_')}_career_graph.pdf")
+        filename = os.path.join(output_dir, f"{contestId}_{phone_number}.pdf")
 
         with PdfPages(filename) as pdf:
 

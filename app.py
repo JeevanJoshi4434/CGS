@@ -9,6 +9,9 @@ import csv
 import io
 from flask import send_file
 from flask_cors import CORS
+import os
+from flask import send_from_directory
+
 
 app = Flask(__name__)
 
@@ -82,6 +85,7 @@ def convert_redis_data_to_student_data(queue_data):
                 "name": decoded_info.get("name", "Unknown"),
                 "assessment_date": decoded_info.get("DOB", "Unknown"),
                 "current_education": decoded_info.get("school", "Unknown"),
+                "phone_number": decoded_info.get("phone_number", "Unknown"),
                 "responses": responses
             }
 
@@ -165,6 +169,7 @@ def process_queue():
         return jsonify({"error": "No student data found in queue"}), 404
 
     student_data_list = convert_redis_data_to_student_data(student_data_list)
+    print(student_data_list)
 
     processed_results = []
     for student_data in student_data_list:
@@ -173,8 +178,11 @@ def process_queue():
         image_path = system.plot_career_scores(
             recommendations=system.calculate_career_scores(processed_responses),
             normalized_scores=processed_responses,
-            student_name=student_data["name"]
+            student_name=student_data["name"],
+            contestId=contest_id,
+            phone_number=student_data["phone_number"],
         )
+
         result["graph_path"] = image_path
         processed_results.append(result)
 
@@ -225,6 +233,29 @@ def get_result():
         return jsonify({"error": "No processed result found for given id"}), 404
 
     return jsonify(json.loads(data))
+
+@app.route('/api/v1/download-report', methods=['POST'])
+def download_report():
+    data = request.get_json()
+
+    # Extract required fields
+    contest_id = data.get('contestId')
+    phone_number = data.get('phoneNumber')
+
+    if not contest_id or not phone_number:
+        return jsonify({"error": "Missing contestId or phoneNumber"}), 400
+
+    # Construct filename
+    filename = f"{contest_id}_{phone_number}.pdf"
+    directory = os.path.join(app.root_path, "career_graphs")
+    print(directory)
+    file_path = os.path.join(directory, filename)
+
+    # Check if file exists
+    if not os.path.isfile(file_path):
+        return jsonify({"error": "File not found"}), 404
+
+    return send_from_directory(directory=directory, path=filename, as_attachment=True)
 
 
 if __name__ == '__main__':
