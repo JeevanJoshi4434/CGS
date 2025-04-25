@@ -3,6 +3,10 @@ import ContestController from '../controller/Contest';
 import { asyncHandler } from '../utils/asyncHandler';
 import { validateToken } from '../middleware/auth';
 
+if(process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const router = express.Router();
 const contestController = new ContestController();
 

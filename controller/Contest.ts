@@ -34,7 +34,7 @@ export default class ContestController extends MemoryCache {
             if (!emailRegex.test(email)) return response(res, 400, 'Invalid email');
 
             // Check if user is already registered for this contest
-            if(await this.get(`contest:${id}:user:${email}`)){
+            if(await this.get(`contest:${id}:user:${phone_number}`)){
                 return response(res, 400, 'Login already done', {redirect: process.env.BASE_URL}); // !!TODO: use middleware
             }
 
@@ -61,7 +61,7 @@ export default class ContestController extends MemoryCache {
             };
 
             // Store user data onto Redis Memory Cache
-            await this.set(`contest:${id}:user:${email}`, { data: Base64.encode(JSON.stringify(UserData)), token: sessionToken });
+            await this.set(`contest:${id}:user:${phone_number}`, { data: Base64.encode(JSON.stringify(UserData)), token: sessionToken });
 
             return response(res, 200, 'Success', { contest: data, redirect: sharableLink, token: sessionToken });
     }
@@ -73,9 +73,9 @@ export default class ContestController extends MemoryCache {
             } = req.body;
 
             // Token and user are already validated by middleware
-            const userEmail = (req.user as any).email;
+            const userIdentifier = (req.user as any).phone_number;
             // Verify user is registered for this contest
-            const user = await this.get(`contest:${contestId}:user:${userEmail}`) as { data: string, token: string };
+            const user = await this.get(`contest:${contestId}:user:${userIdentifier}`) as { data: string, token: string };
             if (!user) {
                 return response(res, 400, 'Login to continue', { redirect: process.env.BASE_URL });
             }
@@ -89,7 +89,7 @@ export default class ContestController extends MemoryCache {
             const queueName = `contest_${contestId}_queue`;
             const job = await QueueManager.addJob(queueName, {
                 contestId,
-                userId: userEmail,
+                userId: userIdentifier,
                 submissionData: queueData,
                 timestamp: new Date()
             });

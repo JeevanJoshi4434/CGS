@@ -1,6 +1,9 @@
 // server.ts
 import App from './app';
 
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const appInstance = new App();
 
 process.on('uncaughtException', (error) => {

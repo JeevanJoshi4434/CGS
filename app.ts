@@ -1,10 +1,12 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import routes from './routes';
 import { createSecureServer } from './utils/secureServer';
 import { response } from './utils/response';
 
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 if(process.env.MUTE_LOG_WARNING !== 'true') {
   const originalConsoleLog = console.log;
   console.log = function(...args) {
@@ -24,7 +26,6 @@ if(process.env.MUTE_LOG_WARNING !== 'true') {
   };
 }
 
-dotenv.config();
 
 class App {
   public app: Application;
