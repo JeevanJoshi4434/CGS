@@ -215,7 +215,7 @@ export default function Student() {
           <div key={name}>
             <label className="block text-gray-700 font-medium mb-1">
               {label}
-              {!required && <span className="text-gray-500 text-sm"> (optional)</span>}
+              {!required && <span className="text-gray-500 text-sm"></span>}
             </label>
             <input
               type={type}
@@ -230,7 +230,7 @@ export default function Student() {
 
         {/* Phone Verification Section */}
         <div>
-          <label className="block text-gray-700 font-medium mb-1">Phone Number</label>
+          <label className="block text-gray-700 font-medium mb-1">Phone Number {otpSent && <span className='text-xs font-bold cursor-pointer' onClick={() => setOtpSent(false)}>Edit</span>}</label>
           <div className="flex gap-2">
             <input
               type="tel"

@@ -6,6 +6,7 @@ import AdminTestManager from './pages/AdminTestManager';
 import ViewResults from './pages/ResultsView';
 import { SessionProvider } from './context/sessionContext'; // Import the context
 import './App.css';
+import FinalPage from './pages/FinalResult';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Admin />} />
           <Route path="/manage" element={<AdminTestManager />} />
+          <Route path="/finish" element={<FinalPage />} />
 
           {/* Wrap only Student and TestPage with SessionProvider */}
           <Route

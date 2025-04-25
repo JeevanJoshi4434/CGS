@@ -50,7 +50,7 @@ const AdminTestManager = () => {
                     : test
             ));
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to generate test link');
+            setError(err.response?.data?.error);
             // Remove the test if link generation failed
             setTests(prevTests => prevTests.filter(test => test.id !== testId));
         } finally {
@@ -128,7 +128,7 @@ const AdminTestManager = () => {
                 id: contest.id,
                 name: contest.name || "",
                 location: contest.location || "",
-                link: `${import.meta.env.VITE_BASE_URL}/start?${btoa(`token=${contest.id}&&date=${contest.date}&&test=true`)}`,
+                link: `${import.meta.env.VITE_BASE_URL}/student?${btoa(`token=${contest.id}&&date=${contest.date}&&test=true`)}`,
                 date: contest.date,
                 isGenerating: false
             }));
@@ -328,6 +328,18 @@ const AdminTestManager = () => {
                                         type="text"
                                         value={newTest.location}
                                         onChange={(e) => setNewTest({ ...newTest, location: e.target.value })}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="e.g., Room 101 or Online"
+                                        disabled={loading}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
+                                    <input
+                                        type="datetime-local"
+                                        value={newTest.date}
+                                        onChange={(e) => setNewTest({ ...newTest, date: e.target.value })}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="e.g., Room 101 or Online"
                                         disabled={loading}

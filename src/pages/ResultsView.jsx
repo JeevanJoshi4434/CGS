@@ -74,7 +74,7 @@ export default function ViewResults() {
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 space-y-6">
                 <div className="flex justify-center">
-                    <img src="./logo.png" alt="Logo" className="h-16 w-16 object-contain" />
+                    <img src="/logo.png" alt="Logo" className="h-16 w-16 object-contain" />
                 </div>
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">View Your Results</h2>
 

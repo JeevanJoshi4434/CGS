@@ -47,9 +47,11 @@ const TestPage = () => {
       const testDate = params.get('date');
 
       if (!tokenParam || !testIdParam || !testDate) return;
+      console.log("Passing")
       const today = new Date().toISOString().split('T')[0];
+      console.log(today, testDate === today, "Test2");
       if (testDate < today) return;
-
+      console.log("test 3");
       setToken(tokenParam);
       setTestId(testIdParam);
       setValidTest(true);
@@ -121,7 +123,7 @@ const TestPage = () => {
       if (result.success) {
         alert('Submitted successfully');
         resetAnswers(testId);
-        navigate('/student');
+        navigate('/finish');
       } else {
         alert(`Submission error: ${result.message}`);
       }
@@ -263,7 +265,7 @@ const TestPage = () => {
                   Page {currentPage + 1} of {totalPages}
                 </span>
 
-                {currentPage==18 ? (
+                {currentPage == 18 ? (
                   <button
                     onClick={calculateScore}
                     className="w-full sm:w-auto px-6 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
