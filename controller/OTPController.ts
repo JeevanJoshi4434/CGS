@@ -16,8 +16,11 @@ export default class OTPController extends MemoryCache {
         this.sms = new SMSProvider(this.apiKey);
     }
     public async sendOTP(req: Request, res: Response): Promise<Response> {
-        const { phoneNumber }: { phoneNumber: string } = req.body;
+        const { phoneNumber, id }: { phoneNumber: string, id: string } = req.body;
         if (!phoneNumber) return response(res, 400, 'Phone number is required');
+        if(await this.get(`contest:${id}`) === null) return response(res, 400, 'Contest not found');
+        if(await this.get(`contest:${id}:user:${phoneNumber}`)) return response(res, 401, 'Already attempted the test');
+        if (phoneNumber.length < 10) return response(res, 400, 'Invalid phone number');
         if (await this.get(`otp:${phoneNumber}`)) {
             const otp = await this.get(`otp:${phoneNumber}`);
             if (! await this.sms.sendQuick(phoneNumber, `Your OTP for CGS test is ${otp}`)) {
@@ -37,10 +40,17 @@ export default class OTPController extends MemoryCache {
 
     public async verifyOTP(req: Request, res: Response): Promise<Response> {
         const { phoneNumber, otp }: { phoneNumber: string, otp: string } = req.body;
+
         if (!phoneNumber || !otp) return response(res, 400, 'Phone number and OTP are required');
+       
         if (! await this.get(`otp:${phoneNumber}`)) return response(res, 400, 'OTP not found');
-        if (otp !== JSON.stringify(await this.get(`otp:${phoneNumber}`))) return response(res, 400, 'Invalid OTP');
+       let existingOTP = JSON.stringify(await this.get(`otp:${phoneNumber}`));
+        if (existingOTP === 'null') return response(res, 400, 'OTP not found');
+        console.log(existingOTP, otp, typeof existingOTP, typeof otp);
+        if (otp !== existingOTP) return response(res, 400, 'Invalid OTP');
+       
         this.del(`otp:${phoneNumber}`);
+       
         return response(res, 200, 'OTP verified');
     }
 
@@ -53,7 +63,6 @@ export default class OTPController extends MemoryCache {
         const queue = await QueueManager.getQueue(queueName);
         if (!queue) return response(res, 500, 'Failed to get or create queue');
 
-        const jobCounts = await queue.getJobCounts();
         const jobs = await queue.getJobs(['completed', 'failed', 'waiting', 'active', 'delayed']);
 
         if (!jobs || jobs.length === 0) {
