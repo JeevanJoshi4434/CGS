@@ -33,7 +33,7 @@ func main() {
 
 	// CORS setup
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:4000"},
+		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
