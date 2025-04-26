@@ -1,12 +1,12 @@
-export function generateOTP(length = 6){
+export function generateOTP(length = 6): string {
     const characters = '0123456789';
     let otp = '';
-    // Use crypto.getRandomValues for better randomness
-    const randomValues = new Uint32Array(length);
-    crypto.getRandomValues(randomValues);
-  
+    
     for (let i = 0; i < length; i++) {
-      otp += characters[randomValues[i] % characters.length];
+        // Simple pseudo-random (NOT cryptographically secure)
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        otp += characters[randomIndex];
     }
+    
     return otp;
-  }
+}

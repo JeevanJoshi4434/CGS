@@ -44,19 +44,13 @@ class App {
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
     const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
-    this.app.use(
-      cors({
-        origin: (origin, callback) => {
-          if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-          } else {
-            callback(new Error(`Origin ${origin} is not allowed by CORS`));
-          }
-        },
-      })
-    );
-  }
-
+    this.app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'sessiontoken'],
+  credentials: true
+}));
+}    
   private version1(): void {
     this.app.use('/api/v1', routes);
   }
